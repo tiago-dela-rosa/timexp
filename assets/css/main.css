@@ -1,0 +1,64 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: 'JetBrains Mono', monospace;
+  }
+  
+  body {
+    @apply bg-gray-900 text-green-400 min-h-screen;
+  }
+  
+  * {
+    @apply border-green-400;
+  }
+}
+
+@layer components {
+  .retro-container {
+    @apply bg-gray-800 border-2 border-green-400 p-6 rounded-none shadow-lg;
+  }
+  
+  .retro-button {
+    @apply bg-gray-900 border-2 border-green-400 text-green-400 px-4 py-2 font-mono 
+           hover:bg-green-400 hover:text-gray-900 transition-colors cursor-pointer
+           focus:outline-none focus:ring-2 focus:ring-green-400;
+  }
+  
+  .retro-button:disabled {
+    @apply opacity-50 cursor-not-allowed hover:bg-gray-900 hover:text-green-400;
+  }
+  
+  .retro-input {
+    @apply bg-gray-900 border-2 border-green-400 text-green-400 px-3 py-2 font-mono
+           focus:outline-none focus:ring-2 focus:ring-green-400 placeholder-green-600;
+  }
+  
+  .retro-title {
+    @apply text-2xl font-bold text-green-400 mb-4 font-mono tracking-wider;
+  }
+  
+  .retro-text {
+    @apply text-green-400 font-mono;
+  }
+  
+  .retro-card {
+    @apply bg-gray-800 border border-green-400 p-4 hover:bg-gray-700 
+           transition-colors cursor-pointer;
+  }
+  
+  .retro-card.selected {
+    @apply bg-green-400 text-gray-900 border-green-400;
+  }
+  
+  .ascii-border {
+    @apply border-2 border-green-400 bg-gray-800;
+  }
+  
+  .stat-display {
+    @apply flex justify-between py-1 border-b border-green-400 last:border-b-0;
+  }
+}
