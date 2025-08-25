@@ -1,8 +1,8 @@
 import { defineStore } from 'pinia'
-import type { Region } from './models/region'
+import type { IRegion } from './models/region'
 
 export const useRegionsStore = defineStore('regions', () => {
-  const regions: Region[] = [
+  const regions: IRegion[] = [
     {
       id: 'forest',
       name: 'Whispering Forest',
@@ -393,15 +393,15 @@ export const useRegionsStore = defineStore('regions', () => {
     }
   ]
 
-  const getRegionById = (id: string): Region | undefined => {
+  const getRegionById = (id: string): IRegion | undefined => {
     return regions.find(region => region.id === id)
   }
 
-  const getUnlockedRegions = (): Region[] => {
+  const getUnlockedRegions = (): IRegion[] => {
     return regions.filter(region => region.isUnlocked)
   }
 
-  const getLockedRegions = (): Region[] => {
+  const getLockedRegions = (): IRegion[] => {
     return regions.filter(region => !region.isUnlocked)
   }
 
