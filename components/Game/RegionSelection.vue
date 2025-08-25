@@ -43,17 +43,17 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { Region } from '~/stores/models/region'
+import type { IRegion } from '~/stores/models/region'
 import { useRegionsStore } from '~/stores/regions'
 
 const regionsStore = useRegionsStore()
-const selectedRegion = ref<Region | null>(null)
+const selectedRegion = ref<IRegion | null>(null)
 
 const emit = defineEmits<{
-  regionSelected: [region: Region]
+  regionSelected: [region: IRegion]
 }>()
 
-const selectRegion = (region: Region) => {
+const selectRegion = (region: IRegion) => {
   if (!region.isUnlocked) return
   
   selectedRegion.value = region
