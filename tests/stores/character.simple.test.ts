@@ -1,9 +1,9 @@
 import { describe, it, expect } from 'vitest'
-import type { Character } from '~/stores/models/character'
+import type { ICharacter } from '~/stores/models/character'
 
 describe('Character Models', () => {
   it('should define Character interface correctly', () => {
-    const mockCharacter: Character = {
+    const mockCharacter: ICharacter = {
       name: 'TestCharacter',
       class: 'warrior',
       level: 1,
@@ -28,7 +28,7 @@ describe('Character Models', () => {
     const classes: Array<'warrior' | 'mage' | 'archer'> = ['warrior', 'mage', 'archer']
     
     classes.forEach(charClass => {
-      const character: Character = {
+      const character: ICharacter = {
         name: `Test${charClass}`,
         class: charClass,
         level: 1,

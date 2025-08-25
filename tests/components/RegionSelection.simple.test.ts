@@ -1,9 +1,9 @@
 import { describe, it, expect } from 'vitest'
-import type { Region } from '~/stores/models/region'
+import type { IRegion } from '~/stores/models/region'
 
 describe('Region Models', () => {
   it('should define Region interface correctly', () => {
-    const mockRegion: Region = {
+    const mockRegion: IRegion = {
       id: 'test-region',
       name: 'Test Region',
       description: 'A test region for unit testing',
@@ -22,7 +22,7 @@ describe('Region Models', () => {
   })
 
   it('should support unlock requirements', () => {
-    const lockedRegion: Region = {
+    const lockedRegion: IRegion = {
       id: 'locked-region',
       name: 'Locked Region',
       description: 'A locked region',
