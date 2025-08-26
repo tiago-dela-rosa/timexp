@@ -9,6 +9,14 @@
       </div>
       
       <GameNoCharacterFallback v-else />
+
+      <GameLevelUpAnimation
+        :show="levelUpData.show"
+        :character-name="levelUpData.characterName"
+        :new-level="levelUpData.newLevel"
+        :stat-bonuses="levelUpData.statBonuses"
+        @close="characterStore.closeLevelUpAnimation"
+      />
     </div>
   </NuxtLayout>
 </template>
@@ -17,6 +25,7 @@
 import GameCharacterStats from '~/components/Game/CharacterStats.vue'
 import GameGameActions from '~/components/Game/GameActions.vue'
 import GameNoCharacterFallback from '~/components/Game/NoCharacterFallback.vue'
+import GameLevelUpAnimation from '~/components/Game/LevelUpAnimation.vue'
 import { useCharacterStore } from '~/stores/character'
 import { useExplorationStore } from '~/stores/exploration'
 import { storeToRefs } from 'pinia'
@@ -29,7 +38,7 @@ definePageMeta({
 
 const characterStore = useCharacterStore()
 const explorationStore = useExplorationStore()
-const { character } = storeToRefs(characterStore)
+const { character, levelUpData } = storeToRefs(characterStore)
 
 onMounted(() => {
   characterStore.loadCharacter()
