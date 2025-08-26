@@ -9,7 +9,7 @@
       <span class="text-2xl">⚡</span>
     </h1>
     <h2 class="text-xl text-green-400 font-mono text-center">
-      BETA
+      Alpha
     </h2>
     <div class="mt-4 text-sm retro-text opacity-75 text-center">
       ◆ Idle RPG with Permadeath ◆

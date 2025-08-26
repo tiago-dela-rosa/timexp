@@ -5,20 +5,7 @@
       GAME LOG
     </h2>
     <div class="ascii-border p-4 h-48 overflow-y-auto" ref="logContainer">
-      <div class="retro-text text-sm space-y-1">
-        <div class="flex items-start gap-2">
-          <span>▶</span>
-          <span>Character {{ character.name }} has been created.</span>
-        </div>
-        <div class="flex items-start gap-2">
-          <span>▶</span>
-          <span>You are ready to begin your adventure...</span>
-        </div>
-        <div class="flex items-start gap-2">
-          <span>▶</span>
-          <span>Choose an action to continue.</span>
-        </div>
-        
+      <div class="retro-text text-sm space-y-1">        
         <div v-for="encounter in recentEncounters" :key="encounter.id" class="flex items-start gap-2">
           <span class="w-4 text-center">{{ getEncounterIcon(encounter.type) }}</span>
           <div class="flex-1">
@@ -41,6 +28,18 @@
             </div>
           </div>
         </div>
+        <div class="flex items-start gap-2">
+          <span>▶</span>
+          <span>Character {{ character.name }} has been created.</span>
+        </div>
+        <div class="flex items-start gap-2">
+          <span>▶</span>
+          <span>You are ready to begin your adventure...</span>
+        </div>
+        <div class="flex items-start gap-2">
+          <span>▶</span>
+          <span>Choose an action to continue.</span>
+        </div>        
       </div>
     </div>
   </div>
@@ -65,7 +64,7 @@ const recentEncounters = computed(() => {
   const exploration = explorationStore.currentExploration
   if (!exploration) return []
   
-  return exploration.encounters.slice(-10)
+  return exploration.encounters.toReversed()
 })
 
 function getEncounterIcon(type: EncounterType): string {
