@@ -15,6 +15,7 @@ describe('Character Models', () => {
       attack: 10,
       defense: 5,
       lives: 3,
+      gold: 0,
       createdAt: Date.now()
     }
 
@@ -40,6 +41,7 @@ describe('Character Models', () => {
         attack: 10,
         defense: 5,
         lives: 3,
+        gold: 0,
         createdAt: Date.now()
       }
       
