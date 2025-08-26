@@ -1,4 +1,6 @@
 import type { IRegion, IEnemy, IGameEvent, IItem, FrequencyType } from './models/region'
+export type { FrequencyType }
+import { useCharacterStore } from './character'
 
 export type EncounterType = 'battle' | 'event' | 'item'
 
@@ -108,6 +110,8 @@ export const useExplorationStore = defineStore('exploration', () => {
         const enemy = selectEncounterByFrequency(region.enemies, frequency)
         if (!enemy) return null
         
+        const goldReward = Math.floor(enemy.xpReward * 0.5) + Math.floor(Math.random() * 5) + 1
+        
         return {
           id,
           type: 'battle',
@@ -116,7 +120,8 @@ export const useExplorationStore = defineStore('exploration', () => {
           description: `Encountered ${enemy.name}`,
           frequency,
           results: {
-            xp: enemy.xpReward
+            xp: enemy.xpReward,
+            gold: goldReward
           }
         }
       }
@@ -170,10 +175,23 @@ export const useExplorationStore = defineStore('exploration', () => {
     const encounter = generateEncounter(currentExploration.value.region)
     if (encounter) {
       currentExploration.value.encounters.push(encounter)
+      applyEncounterResults(encounter)
       saveExploration()
     }
     
     scheduleNextEncounter()
+  }
+
+  function applyEncounterResults(encounter: IEncounter) {
+    const characterStore = useCharacterStore()
+    
+    if (encounter.results?.xp) {
+      characterStore.gainXp(encounter.results.xp)
+    }
+    
+    if (encounter.results?.gold) {
+      characterStore.gainGold(encounter.results.gold)
+    }
   }
 
   function startExploration(region: IRegion, duration: number): boolean {
@@ -317,6 +335,8 @@ export const useExplorationStore = defineStore('exploration', () => {
   function triggerTestEncounter() {
     if (!currentExploration.value?.isActive) return false
     processEncounter()
+    currentExploration.value.nextEncounterTime = Date.now() + (5 * 60 * 1000)
+    saveExploration()
     return true
   }
 
