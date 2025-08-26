@@ -10,6 +10,7 @@ export interface ICharacter {
   attack: number
   defense: number
   lives: number
+  gold: number
   createdAt: number
 }
 
