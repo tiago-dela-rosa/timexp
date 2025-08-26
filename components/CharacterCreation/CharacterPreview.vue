@@ -45,12 +45,12 @@
 </template>
 
 <script setup lang="ts">
-import type { CharacterClass } from '~/stores/models/character'
+import type { ICharacterClass } from '~/stores/models/character'
 import { getClassIcon, getStatIcon } from '~/utils/ascii-icons'
 
 interface Props {
   characterName: string
-  selectedClassData: CharacterClass | null
+  selectedClassData: ICharacterClass | null
 }
 
 defineProps<Props>()

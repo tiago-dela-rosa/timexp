@@ -3,7 +3,7 @@
     <div class="flex justify-between items-center">
       <h1 class="retro-title flex items-center gap-2">
         <span class="text-2xl">⚡</span>
-        TIMEXP BETA
+        TIMEXP
       </h1>
       <button 
         class="retro-button flex items-center gap-2"

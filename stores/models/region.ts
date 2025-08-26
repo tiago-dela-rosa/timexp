@@ -1,6 +1,6 @@
 export type FrequencyType = 'Common' | 'Rare' | 'Super Rare'
 
-export interface Enemy {
+export interface IEnemy {
   name: string
   description: string
   frequency: FrequencyType
@@ -10,7 +10,7 @@ export interface Enemy {
   xpReward: number
 }
 
-export interface GameEvent {
+export interface IGameEvent {
   name: string
   description: string
   frequency: FrequencyType
@@ -22,7 +22,7 @@ export interface GameEvent {
   }
 }
 
-export interface Item {
+export interface IItem {
   name: string
   description: string
   frequency: FrequencyType
@@ -35,7 +35,7 @@ export interface Item {
   }
 }
 
-export interface Region {
+export interface IRegion {
   id: string
   name: string
   description: string
@@ -44,7 +44,7 @@ export interface Region {
     level: number
     description: string
   }
-  enemies: Enemy[]
-  events: GameEvent[]
-  items: Item[]
+  enemies: IEnemy[]
+  events: IGameEvent[]
+  items: IItem[]
 }

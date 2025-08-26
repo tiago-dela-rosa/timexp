@@ -46,11 +46,11 @@
 </template>
 
 <script setup lang="ts">
-import type { Character } from '~/stores/models/character'
+import type { ICharacter } from '~/stores/models/character'
 import { getClassIcon, getStatIcon } from '~/utils/ascii-icons'
 
 interface Props {
-  character: Character
+  character: ICharacter
 }
 
 defineProps<Props>()

@@ -1,4 +1,4 @@
-export interface Character {
+export interface ICharacter {
   name: string
   class: 'warrior' | 'mage' | 'archer'
   level: number
@@ -13,7 +13,7 @@ export interface Character {
   createdAt: number
 }
 
-export interface CharacterClass {
+export interface ICharacterClass {
   name: string
   description: string
   stats: {

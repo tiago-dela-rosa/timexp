@@ -119,14 +119,14 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { Region, FrequencyType } from '~/stores/models/region'
+import type { IRegion, FrequencyType } from '~/stores/models/region'
 
 const props = defineProps<{
-  region: Region | null
+  region: IRegion | null
 }>()
 
 const emit = defineEmits<{
-  startExploration: [region: Region, duration: number]
+  startExploration: [region: IRegion, duration: number]
 }>()
 
 type TabKey = 'enemies' | 'events' | 'items'

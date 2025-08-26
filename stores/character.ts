@@ -1,9 +1,9 @@
-import type { Character, CharacterClass } from './models/character'
+import type { ICharacter, ICharacterClass } from './models/character'
 
 export const useCharacterStore = defineStore('character', () => {
-  const character = ref<Character | null>(null)
+  const character = ref<ICharacter | null>(null)
   
-  const characterClasses = ref<CharacterClass[]>([
+  const characterClasses = ref<ICharacterClass[]>([
     {
       name: 'warrior',
       description: 'High HP, Medium ATK, Low MP',
@@ -50,7 +50,7 @@ export const useCharacterStore = defineStore('character', () => {
 
     character.value = {
       name: name.trim(),
-      class: characterClass as Character['class'],
+      class: characterClass as ICharacter['class'],
       level: 1,
       xp: 0,
       hp: classStats.hp,
