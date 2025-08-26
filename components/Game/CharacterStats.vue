@@ -19,7 +19,18 @@
       </div>
       <div class="stat-display">
         <span>{{ getStatIcon('xp') }}EXP:</span>
-        <span>{{ character.xp }}</span>
+        <span>{{ character.xp }}/{{ xpRequired }}</span>
+      </div>
+      <div class="mb-2">
+        <div class="w-full bg-gray-700 rounded-full h-2 overflow-hidden">
+          <div 
+            class="h-full bg-gradient-to-r from-purple-600 to-purple-400 transition-all duration-500"
+            :style="{ width: `${xpPercentage}%` }"
+          ></div>
+        </div>
+        <div class="text-xs text-gray-400 mt-1 text-center">
+          {{ Math.round(xpPercentage) }}% to level {{ character.level + 1 }}
+        </div>
       </div>
       <div class="stat-display">
         <span>{{ getStatIcon('hp') }}HP:</span>
@@ -41,17 +52,33 @@
         <span>{{ getStatIcon('lives') }}LIVES:</span>
         <span class="text-purple-400">{{ character.lives }}</span>
       </div>
+      <div class="stat-display">
+        <span>{{ getStatIcon('gold') }}GOLD:</span>
+        <span class="text-yellow-400">{{ character.gold }}</span>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import type { ICharacter } from '~/stores/models/character'
 import { getClassIcon, getStatIcon } from '~/utils/ascii-icons'
+import { useCharacterStore } from '~/stores/character'
 
 interface Props {
   character: ICharacter
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
+const characterStore = useCharacterStore()
+
+const xpRequired = computed(() => {
+  return characterStore.calculateXpRequired(props.character.level + 1)
+})
+
+const xpPercentage = computed(() => {
+  if (xpRequired.value === 0) return 100
+  return Math.min(100, (props.character.xp / xpRequired.value) * 100)
+})
 </script>
