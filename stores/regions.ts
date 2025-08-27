@@ -14,8 +14,9 @@ export const useRegionsStore = defineStore('regions', () => {
           description: 'A tiny ball of fury with anger management issues.',
           frequency: 'Common',
           hp: 20,
-          attack: 15,
-          defense: 2,
+          minAttack: 12,
+          maxAttack: 18,
+          defense: 1,
           xpReward: 15
         },
         {
@@ -23,8 +24,9 @@ export const useRegionsStore = defineStore('regions', () => {
           description: 'This fox will lend you nuts... at 300% interest rate.',
           frequency: 'Common',
           hp: 35,
-          attack: 12,
-          defense: 3,
+          minAttack: 10,
+          maxAttack: 14,
+          defense: 2,
           xpReward: 15
         },
         {
@@ -32,8 +34,9 @@ export const useRegionsStore = defineStore('regions', () => {
           description: 'Talks big but runs away when you look at him funny.',
           frequency: 'Common',
           hp: 25,
-          attack: 10,
-          defense: 4,
+          minAttack: 8,
+          maxAttack: 12,
+          defense: 2,
           xpReward: 15
         },
         {
@@ -41,8 +44,9 @@ export const useRegionsStore = defineStore('regions', () => {
           description: 'Once feared, now mostly gums berries to death.',
           frequency: 'Common',
           hp: 50,
-          attack: 8,
-          defense: 5,
+          minAttack: 6,
+          maxAttack: 10,
+          defense: 3,
           xpReward: 15
         },
         {
@@ -50,8 +54,9 @@ export const useRegionsStore = defineStore('regions', () => {
           description: 'Says it was wise before wisdom was cool. Wears tiny glasses.',
           frequency: 'Rare',
           hp: 45,
-          attack: 16,
-          defense: 4,
+          minAttack: 14,
+          maxAttack: 18,
+          defense: 2,
           xpReward: 35
         },
         {
@@ -59,8 +64,9 @@ export const useRegionsStore = defineStore('regions', () => {
           description: 'Suspicious fungi offering "magical experiences" behind trees.',
           frequency: 'Rare',
           hp: 75,
-          attack: 12,
-          defense: 18,
+          minAttack: 10,
+          maxAttack: 14,
+          defense: 4,
           xpReward: 35
         },
         {
@@ -68,8 +74,9 @@ export const useRegionsStore = defineStore('regions', () => {
           description: 'Demands to speak to the forest manager. Very, VERY angry.',
           frequency: 'Super Rare',
           hp: 120,
-          attack: 25,
-          defense: 15,
+          minAttack: 20,
+          maxAttack: 30,
+          defense: 6,
           xpReward: 100
         }                
       ],
