@@ -5,7 +5,8 @@ export interface IEnemy {
   description: string
   frequency: FrequencyType
   hp: number
-  attack: number
+  minAttack: number
+  maxAttack: number
   defense: number
   xpReward: number
 }
