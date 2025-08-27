@@ -17,6 +17,8 @@
         :stat-bonuses="levelUpData.statBonuses"
         @close="characterStore.closeLevelUpAnimation"
       />
+      
+      <GameBattleModal />
     </div>
   </NuxtLayout>
 </template>
@@ -26,6 +28,7 @@ import GameCharacterStats from '~/components/Game/CharacterStats.vue'
 import GameGameActions from '~/components/Game/GameActions.vue'
 import GameNoCharacterFallback from '~/components/Game/NoCharacterFallback.vue'
 import GameLevelUpAnimation from '~/components/Game/LevelUpAnimation.vue'
+import GameBattleModal from '~/components/Game/BattleModal.vue'
 import { useCharacterStore } from '~/stores/character'
 import { useExplorationStore } from '~/stores/exploration'
 import { storeToRefs } from 'pinia'
