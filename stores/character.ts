@@ -1,4 +1,6 @@
 import type { ICharacter, ICharacterClass } from './models/character'
+import type { IEnemy } from './models/region'
+import { simulateBattle, type IBattleResult } from '~/utils/battle'
 
 export const useCharacterStore = defineStore('character', () => {
   const character = ref<ICharacter | null>(null)
@@ -12,6 +14,18 @@ export const useCharacterStore = defineStore('character', () => {
     characterName: '',
     newLevel: 0,
     statBonuses: []
+  })
+
+  const battleState = ref<{
+    isInBattle: boolean
+    enemy: IEnemy | null
+    battleResult: IBattleResult | null
+    showResult: boolean
+  }>({
+    isInBattle: false,
+    enemy: null,
+    battleResult: null,
+    showResult: false
   })
   
   const characterClasses = ref<ICharacterClass[]>([
@@ -179,6 +193,81 @@ export const useCharacterStore = defineStore('character', () => {
     levelUpData.value.show = false
   }
 
+  function startBattle(enemy: IEnemy): boolean {
+    if (!character.value || battleState.value.isInBattle) return false
+    
+    battleState.value.isInBattle = true
+    battleState.value.enemy = enemy
+    battleState.value.battleResult = null
+    battleState.value.showResult = false
+    
+    return true
+  }
+
+  function executeBattle(): IBattleResult | null {
+    if (!character.value || !battleState.value.enemy) return null
+
+    const result = simulateBattle(
+      character.value.attack,
+      character.value.defense,
+      character.value.hp,
+      battleState.value.enemy.attack,
+      battleState.value.enemy.defense,
+      battleState.value.enemy.hp,
+      battleState.value.enemy.name
+    )
+
+    battleState.value.battleResult = result
+    
+    character.value.hp = result.heroFinalHp
+    
+    if (!result.isVictory) {
+      character.value.lives = Math.max(0, character.value.lives - 1)
+      
+      if (character.value.lives > 0 && character.value.hp <= 0) {
+        character.value.hp = character.value.maxHp
+      }
+    }
+    
+    saveCharacter()
+    return result
+  }
+
+  function showBattleResult() {
+    battleState.value.showResult = true
+  }
+
+  function closeBattle() {
+    battleState.value.isInBattle = false
+    battleState.value.enemy = null
+    battleState.value.battleResult = null
+    battleState.value.showResult = false
+  }
+
+  function takeDamage(amount: number): boolean {
+    if (!character.value) return false
+    
+    character.value.hp = Math.max(0, character.value.hp - amount)
+    
+    if (character.value.hp === 0) {
+      character.value.lives = Math.max(0, character.value.lives - 1)
+      
+      if (character.value.lives > 0) {
+        character.value.hp = character.value.maxHp
+      }
+    }
+    
+    saveCharacter()
+    return character.value.hp > 0 || character.value.lives > 0
+  }
+
+  function healCharacter(amount: number) {
+    if (!character.value) return
+    
+    character.value.hp = Math.min(character.value.maxHp, character.value.hp + amount)
+    saveCharacter()
+  }
+
   return {
     character: readonly(character),
     characterClasses,
@@ -191,6 +280,13 @@ export const useCharacterStore = defineStore('character', () => {
     gainXp,
     gainGold,
     levelUpData: readonly(levelUpData),
-    closeLevelUpAnimation
+    closeLevelUpAnimation,
+    battleState: readonly(battleState),
+    startBattle,
+    executeBattle,
+    showBattleResult,
+    closeBattle,
+    takeDamage,
+    healCharacter
   }
 })
