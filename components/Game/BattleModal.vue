@@ -16,15 +16,16 @@
           <div class="text-blue-400 text-sm font-bold mb-1">{{ characterStore.character?.name }}</div>
           <div class="w-full bg-gray-700 rounded-full h-4 overflow-hidden">
             <div 
-              class="bg-blue-500 h-full transition-all ease-out"
+              class="bg-blue-500 h-full ease-out"
+              :class="{ 'transition-all': animateHpBars }"
               :style="{ 
                 width: heroHpPercentage + '%',
-                transitionDuration: `${battleConfig.ui.hpBarAnimationDuration}ms`
+                transitionDuration: animateHpBars ? `${battleConfig.ui.hpBarAnimationDuration}ms` : '0ms'
               }"
             ></div>
           </div>
           <div class="text-xs text-gray-300 mt-1">
-            {{ currentTurn?.heroHp || characterStore.character?.hp }}/{{ currentTurn?.heroMaxHp || characterStore.character?.maxHp }} HP
+            {{ displayHeroHp }}/{{ displayHeroMaxHp }} HP
           </div>
         </div>
 
@@ -33,15 +34,16 @@
           <div class="text-red-400 text-sm font-bold mb-1">{{ characterStore.battleState.enemy?.name }}</div>
           <div class="w-full bg-gray-700 rounded-full h-4 overflow-hidden">
             <div 
-              class="bg-red-500 h-full transition-all ease-out"
+              class="bg-red-500 h-full ease-out"
+              :class="{ 'transition-all': animateHpBars }"
               :style="{ 
                 width: enemyHpPercentage + '%',
-                transitionDuration: `${battleConfig.ui.hpBarAnimationDuration}ms`
+                transitionDuration: animateHpBars ? `${battleConfig.ui.hpBarAnimationDuration}ms` : '0ms'
               }"
             ></div>
           </div>
           <div class="text-xs text-gray-300 mt-1">
-            {{ currentTurn?.enemyHp || characterStore.battleState.enemy?.hp }}/{{ currentTurn?.enemyMaxHp || characterStore.battleState.enemy?.hp }} HP
+            {{ displayEnemyHp }}/{{ displayEnemyMaxHp }} HP
           </div>
         </div>
 
@@ -85,15 +87,37 @@ const currentTurnIndex = ref(0)
 const displayedLogs = ref<string[]>([])
 const battleComplete = ref(false)
 const currentTurn = ref<IBattleTurn | null>(null)
+const animateHpBars = ref(false)
 
 const heroHpPercentage = computed(() => {
-  if (!currentTurn.value) return 100
+  if (!currentTurn.value) {
+    return characterStore.character ? 
+      (characterStore.character.hp / characterStore.character.maxHp) * 100 : 100
+  }
   return (currentTurn.value.heroHp / currentTurn.value.heroMaxHp) * 100
 })
 
 const enemyHpPercentage = computed(() => {
-  if (!currentTurn.value) return 100
+  if (!currentTurn.value) {
+    return characterStore.battleState.enemy ? 100 : 100
+  }
   return (currentTurn.value.enemyHp / currentTurn.value.enemyMaxHp) * 100
+})
+
+const displayHeroHp = computed(() => {
+  return currentTurn.value?.heroHp ?? characterStore.character?.hp ?? 0
+})
+
+const displayHeroMaxHp = computed(() => {
+  return currentTurn.value?.heroMaxHp ?? characterStore.character?.maxHp ?? 0
+})
+
+const displayEnemyHp = computed(() => {
+  return currentTurn.value?.enemyHp ?? characterStore.battleState.enemy?.hp ?? 0
+})
+
+const displayEnemyMaxHp = computed(() => {
+  return currentTurn.value?.enemyMaxHp ?? characterStore.battleState.enemy?.hp ?? 0
 })
 
 watch(
@@ -114,6 +138,7 @@ function startAutoBattle() {
   displayedLogs.value = []
   battleComplete.value = false
   currentTurn.value = null
+  animateHpBars.value = false
   
   if (battleResult.value) {
     processTurns()
@@ -128,8 +153,16 @@ function processTurns() {
   const processNextTurn = () => {
     if (currentTurnIndex.value < turns.length) {
       const turn = turns[currentTurnIndex.value]
-      currentTurn.value = turn
+      
+      // First show the text
       displayedLogs.value.push(turn.message)
+      
+      // Then after a delay, update HP and animate bars
+      setTimeout(() => {
+        currentTurn.value = turn
+        animateHpBars.value = true
+      }, 800) // Delay for text to appear first
+      
       currentTurnIndex.value++
       
       if (currentTurnIndex.value < turns.length) {
@@ -162,6 +195,7 @@ function resetBattle() {
   displayedLogs.value = []
   battleComplete.value = false
   currentTurn.value = null
+  animateHpBars.value = false
 }
 </script>
 
