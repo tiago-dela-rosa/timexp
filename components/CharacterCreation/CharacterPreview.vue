@@ -27,7 +27,9 @@
       </div>
       <div class="stat-display">
         <span>{{ getStatIcon('attack') }}ATK:</span>
-        <span :class="{ 'opacity-50': !selectedClassData }">{{ selectedClassData?.stats.attack || '-' }}</span>
+        <span :class="{ 'opacity-50': !selectedClassData }">
+          {{ selectedClassData ? `${selectedClassData.stats.minAttack} - ${selectedClassData.stats.maxAttack}` : '-' }}
+        </span>
       </div>
       <div class="stat-display">
         <span>{{ getStatIcon('defense') }}DEF:</span>

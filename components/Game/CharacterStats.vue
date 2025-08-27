@@ -42,7 +42,7 @@
       </div>
       <div class="stat-display">
         <span>{{ getStatIcon('attack') }}ATK:</span>
-        <span class="text-yellow-400">{{ character.attack }}</span>
+        <span class="text-yellow-400">{{ character.minAttack }} - {{ character.maxAttack }}</span>
       </div>
       <div class="stat-display">
         <span>{{ getStatIcon('defense') }}DEF:</span>
