@@ -16,6 +16,7 @@ export const ASCII_ICONS = {
     level: '★',       // Star
     xp: '◆',          // Diamond
     lives: '♠',       // Spade
+    gold: '🪙',       // Coin
   },
   
   // Game Actions

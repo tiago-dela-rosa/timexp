@@ -10,41 +10,75 @@ export const useRegionsStore = defineStore('regions', () => {
       isUnlocked: true,
       enemies: [
         {
-          name: 'Forest Goblin',
-          description: 'A small, mischievous creature that lurks in the shadows.',
+          name: 'Rabid Squirrel',
+          description: 'A tiny ball of fury with anger management issues.',
+          frequency: 'Common',
+          hp: 20,
+          minAttack: 12,
+          maxAttack: 18,
+          defense: 1,
+          xpReward: 15
+        },
+        {
+          name: 'Loan Shark Fox',
+          description: 'This fox will lend you nuts... at 300% interest rate.',
+          frequency: 'Common',
+          hp: 35,
+          minAttack: 10,
+          maxAttack: 14,
+          defense: 2,
+          xpReward: 15
+        },
+        {
+          name: 'Cowardly Goblin',
+          description: 'Talks big but runs away when you look at him funny.',
           frequency: 'Common',
           hp: 25,
-          attack: 8,
+          minAttack: 8,
+          maxAttack: 12,
+          defense: 2,
+          xpReward: 15
+        },
+        {
+          name: 'Toothless Bear',
+          description: 'Once feared, now mostly gums berries to death.',
+          frequency: 'Common',
+          hp: 50,
+          minAttack: 6,
+          maxAttack: 10,
           defense: 3,
           xpReward: 15
         },
         {
-          name: 'Wild Boar',
-          description: 'An aggressive boar with sharp tusks.',
-          frequency: 'Common',
-          hp: 40,
-          attack: 12,
-          defense: 5,
-          xpReward: 20
-        },
-        {
-          name: 'Forest Wraith',
-          description: 'A ghostly apparition that feeds on life force.',
+          name: 'Hipster Owl',
+          description: 'Says it was wise before wisdom was cool. Wears tiny glasses.',
           frequency: 'Rare',
-          hp: 60,
-          attack: 15,
+          hp: 45,
+          minAttack: 14,
+          maxAttack: 18,
           defense: 2,
           xpReward: 35
         },
         {
-          name: 'Ancient Treant',
-          description: 'A massive tree creature, guardian of the forest.',
+          name: 'Mushroom Dealer',
+          description: 'Suspicious fungi offering "magical experiences" behind trees.',
+          frequency: 'Rare',
+          hp: 75,
+          minAttack: 10,
+          maxAttack: 14,
+          defense: 4,
+          xpReward: 35
+        },
+        {
+          name: 'Karen Tree',
+          description: 'Demands to speak to the forest manager. Very, VERY angry.',
           frequency: 'Super Rare',
           hp: 120,
-          attack: 25,
-          defense: 15,
+          minAttack: 20,
+          maxAttack: 30,
+          defense: 6,
           xpReward: 100
-        }
+        }                
       ],
       events: [
         {

@@ -4,7 +4,7 @@
       <span>📜</span>
       GAME LOG
     </h2>
-    <div class="ascii-border p-4 h-48 overflow-y-auto" ref="logContainer">
+    <div class="ascii-border p-4 h-48 overflow-y-auto" ref="logContainer" @scroll="onScroll">
       <div class="retro-text text-sm space-y-1">        
         <div v-for="encounter in recentEncounters" :key="encounter.id" class="flex items-start gap-2">
           <span class="w-4 text-center">{{ getEncounterIcon(encounter.type) }}</span>
@@ -59,6 +59,7 @@ defineProps<Props>()
 
 const explorationStore = useExplorationStore()
 const logContainer = ref<HTMLElement>()
+const isUserScrolled = ref(false)
 
 const recentEncounters = computed(() => {
   const exploration = explorationStore.currentExploration
@@ -97,9 +98,18 @@ function formatTimestamp(timestamp: number): string {
   })
 }
 
+function onScroll(): void {
+  if (!logContainer.value) return
+  
+  const { scrollTop, scrollHeight, clientHeight } = logContainer.value
+  const isScrolledToBottom = Math.abs(scrollHeight - clientHeight - scrollTop) < 5
+  
+  isUserScrolled.value = !isScrolledToBottom
+}
+
 watch(recentEncounters, async () => {
   await nextTick()
-  if (logContainer.value) {
+  if (logContainer.value && !isUserScrolled.value) {
     logContainer.value.scrollTop = logContainer.value.scrollHeight
   }
 }, { deep: true })

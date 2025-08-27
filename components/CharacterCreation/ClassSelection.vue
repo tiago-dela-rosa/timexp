@@ -20,7 +20,7 @@
           <div class="text-right text-sm">
             <div>{{ getStatIcon('hp') }} {{ characterClass.stats.hp }}</div>
             <div>{{ getStatIcon('mp') }} {{ characterClass.stats.mp }}</div>
-            <div>{{ getStatIcon('attack') }} {{ characterClass.stats.attack }}</div>
+            <div>{{ getStatIcon('attack') }} {{ characterClass.stats.minAttack }} - {{ characterClass.stats.maxAttack }}</div>
           </div>
         </div>
       </div>

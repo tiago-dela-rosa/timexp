@@ -7,9 +7,11 @@ export interface ICharacter {
   maxHp: number
   mp: number
   maxMp: number
-  attack: number
+  minAttack: number
+  maxAttack: number
   defense: number
   lives: number
+  gold: number
   createdAt: number
 }
 
@@ -21,7 +23,8 @@ export interface ICharacterClass {
     maxHp: number
     mp: number
     maxMp: number
-    attack: number
+    minAttack: number
+    maxAttack: number
     defense: number
   }
 }

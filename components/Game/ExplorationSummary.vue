@@ -75,10 +75,10 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { ExplorationSummary } from '~/stores/exploration'
+import type { IExplorationSummary } from '~/stores/exploration'
 
 const props = defineProps<{
-  summary: ExplorationSummary | null
+  summary: IExplorationSummary | null
   regionName?: string
   show: boolean
 }>()
