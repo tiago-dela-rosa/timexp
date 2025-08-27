@@ -27,41 +27,60 @@ export const useCharacterStore = defineStore('character', () => {
     battleResult: null,
     showResult: false
   })
+
+  const gameOverState = ref<{
+    show: boolean
+    characterName: string
+    level: number
+    totalXp: number
+    gold: number
+    survivalTime: string
+  }>({
+    show: false,
+    characterName: '',
+    level: 1,
+    totalXp: 0,
+    gold: 0,
+    survivalTime: '0 minutes'
+  })
   
   const characterClasses = ref<ICharacterClass[]>([
     {
       name: 'warrior',
-      description: 'High HP, Medium ATK, Low MP',
+      description: 'High HP, Consistent ATK, Low MP',
       stats: {
         hp: 120,
         maxHp: 120,
         mp: 30,
         maxMp: 30,
-        attack: 15,
+        minAttack: 13,
+        maxAttack: 17,
         defense: 8
       }
     },
     {
       name: 'mage',
-      description: 'Low HP, High MP, Medium Magic ATK',
+      description: 'Low HP, High MP, Variable Magic ATK',
       stats: {
         hp: 80,
         maxHp: 80,
         mp: 100,
         maxMp: 100,
-        attack: 8,
+        minAttack: 6,
+        maxAttack: 12,
         defense: 4
       }
     },
     {
       name: 'archer',
-      description: 'Medium HP, High Physical ATK, Low MP',
+      description: 'Medium HP, High Variable ATK, Low MP',
       stats: {
         hp: 100,
         maxHp: 100,
         mp: 50,
         maxMp: 50,
-        attack: 18,
+        minAttack: 12,
+        maxAttack: 24,
         defense: 6
       }
     }
@@ -82,7 +101,8 @@ export const useCharacterStore = defineStore('character', () => {
       maxHp: classStats.maxHp,
       mp: classStats.mp,
       maxMp: classStats.maxMp,
-      attack: classStats.attack,
+      minAttack: classStats.minAttack,
+      maxAttack: classStats.maxAttack,
       defense: classStats.defense,
       lives: 3,
       gold: 0,
@@ -144,7 +164,8 @@ export const useCharacterStore = defineStore('character', () => {
     character.value.hp += classBonus.hp
     character.value.maxMp += classBonus.mp
     character.value.mp += classBonus.mp
-    character.value.attack += classBonus.attack
+    character.value.minAttack += classBonus.minAttack
+    character.value.maxAttack += classBonus.maxAttack
 
     showLevelUpAnimation(character.value.name, character.value.level, classBonus)
   }
@@ -152,13 +173,13 @@ export const useCharacterStore = defineStore('character', () => {
   function getClassLevelBonus(characterClass: ICharacter['class']) {
     switch (characterClass) {
       case 'warrior':
-        return { hp: 15, mp: 3, attack: 2 }
+        return { hp: 15, mp: 3, minAttack: 1, maxAttack: 1 }
       case 'mage':
-        return { hp: 8, mp: 12, attack: 1 }
+        return { hp: 8, mp: 12, minAttack: 0, maxAttack: 2 }
       case 'archer':
-        return { hp: 10, mp: 5, attack: 3 }
+        return { hp: 10, mp: 5, minAttack: 1, maxAttack: 2 }
       default:
-        return { hp: 10, mp: 5, attack: 2 }
+        return { hp: 10, mp: 5, minAttack: 1, maxAttack: 1 }
     }
   }
 
@@ -168,7 +189,7 @@ export const useCharacterStore = defineStore('character', () => {
     saveCharacter()
   }
 
-  function showLevelUpAnimation(name: string, level: number, bonuses: { hp: number; mp: number; attack: number }) {
+  function showLevelUpAnimation(name: string, level: number, bonuses: { hp: number; mp: number; minAttack: number; maxAttack: number }) {
     const statBonuses = []
     
     if (bonuses.hp > 0) {
@@ -177,8 +198,11 @@ export const useCharacterStore = defineStore('character', () => {
     if (bonuses.mp > 0) {
       statBonuses.push({ stat: 'mp', amount: bonuses.mp, icon: '✦' })
     }
-    if (bonuses.attack > 0) {
-      statBonuses.push({ stat: 'attack', amount: bonuses.attack, icon: '⚔' })
+    if (bonuses.minAttack > 0 || bonuses.maxAttack > 0) {
+      const attackBonus = bonuses.minAttack + bonuses.maxAttack
+      if (attackBonus > 0) {
+        statBonuses.push({ stat: 'attack', amount: attackBonus, icon: '⚔' })
+      }
     }
 
     levelUpData.value = {
@@ -208,10 +232,12 @@ export const useCharacterStore = defineStore('character', () => {
     if (!character.value || !battleState.value.enemy) return null
 
     const result = simulateBattle(
-      character.value.attack,
+      character.value.minAttack,
+      character.value.maxAttack,
       character.value.defense,
       character.value.hp,
-      battleState.value.enemy.attack,
+      battleState.value.enemy.minAttack,
+      battleState.value.enemy.maxAttack,
       battleState.value.enemy.defense,
       battleState.value.enemy.hp,
       battleState.value.enemy.name
@@ -226,6 +252,8 @@ export const useCharacterStore = defineStore('character', () => {
       
       if (character.value.lives > 0 && character.value.hp <= 0) {
         character.value.hp = character.value.maxHp
+      } else if (character.value.lives <= 0) {
+        showGameOver()
       }
     }
     
@@ -268,6 +296,45 @@ export const useCharacterStore = defineStore('character', () => {
     saveCharacter()
   }
 
+  function showGameOver() {
+    if (!character.value) return
+    
+    const survivalTime = calculateSurvivalTime(character.value.createdAt)
+    
+    gameOverState.value = {
+      show: true,
+      characterName: character.value.name,
+      level: character.value.level,
+      totalXp: character.value.xp,
+      gold: character.value.gold,
+      survivalTime
+    }
+  }
+
+  function calculateSurvivalTime(createdAt: number): string {
+    const now = Date.now()
+    const timeDiff = now - createdAt
+    const minutes = Math.floor(timeDiff / (1000 * 60))
+    const hours = Math.floor(minutes / 60)
+    
+    if (hours > 0) {
+      const remainingMinutes = minutes % 60
+      return `${hours}h ${remainingMinutes}m`
+    }
+    return `${minutes}m`
+  }
+
+  function handleGameOverAction(action: 'newCharacter' | 'mainMenu') {
+    clearCharacter()
+    gameOverState.value.show = false
+    
+    if (action === 'mainMenu') {
+      navigateTo('/')
+    } else if (action === 'newCharacter') {
+      navigateTo('/create-character')
+    }
+  }
+
   return {
     character: readonly(character),
     characterClasses,
@@ -287,6 +354,8 @@ export const useCharacterStore = defineStore('character', () => {
     showBattleResult,
     closeBattle,
     takeDamage,
-    healCharacter
+    healCharacter,
+    gameOverState: readonly(gameOverState),
+    handleGameOverAction
   }
 })
