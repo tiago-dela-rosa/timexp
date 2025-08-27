@@ -19,6 +19,17 @@
       />
       
       <GameBattleModal />
+      
+      <GameOverModal
+        :show="gameOverState.show"
+        :character-name="gameOverState.characterName"
+        :level="gameOverState.level"
+        :total-xp="gameOverState.totalXp"
+        :gold="gameOverState.gold"
+        :survival-time="gameOverState.survivalTime"
+        @create-new-character="characterStore.handleGameOverAction('newCharacter')"
+        @back-to-menu="characterStore.handleGameOverAction('mainMenu')"
+      />
     </div>
   </NuxtLayout>
 </template>
@@ -29,6 +40,7 @@ import GameGameActions from '~/components/Game/GameActions.vue'
 import GameNoCharacterFallback from '~/components/Game/NoCharacterFallback.vue'
 import GameLevelUpAnimation from '~/components/Game/LevelUpAnimation.vue'
 import GameBattleModal from '~/components/Game/BattleModal.vue'
+import GameOverModal from '~/components/Game/GameOverModal.vue'
 import { useCharacterStore } from '~/stores/character'
 import { useExplorationStore } from '~/stores/exploration'
 import { storeToRefs } from 'pinia'
@@ -41,7 +53,7 @@ definePageMeta({
 
 const characterStore = useCharacterStore()
 const explorationStore = useExplorationStore()
-const { character, levelUpData } = storeToRefs(characterStore)
+const { character, levelUpData, gameOverState } = storeToRefs(characterStore)
 
 onMounted(() => {
   characterStore.loadCharacter()
