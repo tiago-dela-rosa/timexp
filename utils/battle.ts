@@ -2,21 +2,24 @@ import { battleConfig } from '~/config/battle'
 
 /**
  * Core damage calculation formula for the entire game
- * @param {number} attack - Attacker's attack stat
+ * @param {number} minAttack - Attacker's minimum attack stat
+ * @param {number} maxAttack - Attacker's maximum attack stat
  * @param {number} defense - Defender's defense stat  
  * @returns {number} Final damage dealt
  * 
  * Formula Logic:
+ * - Rolls random attack value between min and max attack
  * - Each defense point provides configurable damage reduction (default 10%)
  * - Defense 5 = 50% damage reduction  
  * - Defense 10+ = almost immune (minimum configurable damage)
  * - Always deals at least minimum damage for game balance
  */
-export function calculateDamage(attack: number, defense: number): number {
+export function calculateDamage(minAttack: number, maxAttack: number, defense: number): number {
+  const attackRoll = Math.floor(Math.random() * (maxAttack - minAttack + 1)) + minAttack
   const damageReduction = defense * battleConfig.damage.defenseReductionPerPoint
   const finalDamage = Math.max(
     battleConfig.damage.minimumDamage, 
-    Math.round(attack * (1 - damageReduction))
+    Math.round(attackRoll * (1 - damageReduction))
   )
   return finalDamage
 }
@@ -40,10 +43,12 @@ export interface IBattleResult {
 }
 
 export function simulateBattle(
-  heroAttack: number,
+  heroMinAttack: number,
+  heroMaxAttack: number,
   heroDefense: number,
   heroHp: number,
-  enemyAttack: number,
+  enemyMinAttack: number,
+  enemyMaxAttack: number,
   enemyDefense: number,
   enemyHp: number,
   enemyName: string
@@ -63,7 +68,7 @@ export function simulateBattle(
   })
   
   while (currentHeroHp > 0 && currentEnemyHp > 0) {
-    const heroDamage = calculateDamage(heroAttack, enemyDefense)
+    const heroDamage = calculateDamage(heroMinAttack, heroMaxAttack, enemyDefense)
     const previousEnemyHp = currentEnemyHp
     currentEnemyHp = Math.max(0, currentEnemyHp - heroDamage)
     
@@ -89,7 +94,7 @@ export function simulateBattle(
       break
     }
     
-    const enemyDamage = calculateDamage(enemyAttack, heroDefense)
+    const enemyDamage = calculateDamage(enemyMinAttack, enemyMaxAttack, heroDefense)
     const previousHeroHp = currentHeroHp
     currentHeroHp = Math.max(0, currentHeroHp - enemyDamage)
     
