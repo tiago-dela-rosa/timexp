@@ -185,6 +185,17 @@ export const useExplorationStore = defineStore('exploration', () => {
   function applyEncounterResults(encounter: IEncounter) {
     const characterStore = useCharacterStore()
     
+    if (encounter.type === 'battle' && encounter.results) {
+      const enemy = currentExploration.value?.region.enemies.find(
+        e => e.name === encounter.name
+      )
+      
+      if (enemy) {
+        characterStore.startBattle(enemy)
+        return
+      }
+    }
+    
     if (encounter.results?.xp) {
       characterStore.gainXp(encounter.results.xp)
     }
@@ -340,6 +351,33 @@ export const useExplorationStore = defineStore('exploration', () => {
     return true
   }
 
+  function completeBattle(isVictory: boolean, encounterId: string) {
+    const characterStore = useCharacterStore()
+    
+    if (!currentExploration.value) return
+    
+    const encounter = currentExploration.value.encounters.find(e => e.id === encounterId)
+    if (!encounter || encounter.type !== 'battle') return
+    
+    if (isVictory && encounter.results) {
+      if (encounter.results.xp) {
+        characterStore.gainXp(encounter.results.xp)
+      }
+      if (encounter.results.gold) {
+        characterStore.gainGold(encounter.results.gold)
+      }
+    }
+    
+    if (!isVictory) {
+      const character = characterStore.character
+      if (character && character.lives <= 0) {
+        forceStopExploration()
+      }
+    }
+    
+    saveExploration()
+  }
+
   return {
     currentExploration: readonly(currentExploration),
     explorationHistory: readonly(explorationHistory),
@@ -353,6 +391,7 @@ export const useExplorationStore = defineStore('exploration', () => {
     getExplorationSummary,
     loadExploration,
     clearExploration,
-    triggerTestEncounter
+    triggerTestEncounter,
+    completeBattle
   }
 })
