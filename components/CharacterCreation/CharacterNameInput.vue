@@ -4,14 +4,24 @@
       <span>⚔️</span>
       CHARACTER NAME:
     </label>
-    <input 
-      v-model="localName" 
-      type="text" 
-      placeholder="◆ Enter your hero's name..."
-      class="retro-input w-full"
-      maxlength="20"
-      @input="updateName"
-    >
+    <div class="flex gap-2">
+      <input 
+        v-model="localName" 
+        type="text" 
+        placeholder="◆ Enter your hero's name..."
+        class="retro-input flex-1"
+        maxlength="20"
+        @input="updateName"
+      >
+      <button
+        @click="generateRandomName"
+        :disabled="isGenerating"
+        class="retro-button px-3 py-1 text-sm"
+        type="button"
+      >
+        {{ isGenerating ? '⏳' : '🎲' }}
+      </button>
+    </div>
   </div>
 </template>
 
@@ -20,6 +30,7 @@ import { ref, watch } from 'vue'
 
 interface Props {
   modelValue: string
+  characterClass?: string
 }
 
 interface Emits {
@@ -30,9 +41,31 @@ const props = defineProps<Props>()
 const emit = defineEmits<Emits>()
 
 const localName = ref(props.modelValue)
+const isGenerating = ref(false)
 
 function updateName() {
   emit('update:modelValue', localName.value)
+}
+
+async function generateRandomName() {
+  isGenerating.value = true
+  
+  try {
+    
+    const response = await $fetch('/api/generateName', {
+      method: "POST",
+      body: {
+        characterClass: props.characterClass,
+      }
+    })
+    
+    localName.value = response.name || ''
+    updateName()
+  } catch (error) {
+    console.error('Error generating random name:', error)
+  } finally {
+    isGenerating.value = false
+  }
 }
 
 watch(() => props.modelValue, (newValue) => {

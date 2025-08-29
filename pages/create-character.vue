@@ -5,7 +5,7 @@
       
       <div class="grid md:grid-cols-2 gap-8">
         <div class="space-y-6">
-          <CharacterNameInput v-model="characterName" />
+          <CharacterNameInput v-model="characterName" :character-class="selectedClass" />
           <ClassSelection v-model="selectedClass" />
           
           <button 
